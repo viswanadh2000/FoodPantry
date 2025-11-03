@@ -1,0 +1,78 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: ${SPRING_PROFILE:dev}
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:pantrypulse}}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER:pantrypulse}
+    password: ${DB_PASS:viswa123}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always
+  # Disable Redis auto-configuration when Redis is not available
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+
+security:
+  jwt:
+    # Must be Base64-encoded and decode to >= 32 bytes (HS256). Override via env var JWT_SECRET_BASE64.
+    # The fallback below decodes to 32+ bytes; fine for local dev only.
+    secret: "${JWT_SECRET_BASE64:c3VwZXJzZWNyZXRrZXl0aGF0aXNhdGxlYXN0MzJieXRlc2xvbmdmb3JIUzI1Ng==}"
+    expires-in-minutes: 60
+
+app:
+  security:
+    open: true
+
+---
+# Development profile
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pantrypulse
+    username: pantrypulse
+    password: viswa123
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+---
+# Production profile
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
