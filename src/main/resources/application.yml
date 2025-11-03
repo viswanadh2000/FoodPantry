@@ -69,10 +69,35 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:pantrypulse}}
-    username: ${DB_USER:pantrypulse}
-    password: ${DB_PASS:viswa123}
+    # Railway provides DATABASE_URL automatically
+    url: ${DATABASE_URL}
   jpa:
     show-sql: false
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: false
+  sql:
+    init:
+      mode: never  # Don't run schema.sql in production
+
+server:
+  port: ${PORT:8080}  # Railway sets PORT environment variable
+
+app:
+  security:
+    open: false  # Enable security in production
+
+security:
+  jwt:
+    # Override with JWT_SECRET_BASE64 environment variable in Railway
+    secret: "${JWT_SECRET_BASE64}"
+    expires-in-minutes: 60
+
+logging:
+  level:
+    root: INFO
+    com.pantrypulse: INFO
+    org.springframework.web: WARN
+    org.hibernate: WARN
