@@ -1,7 +1,11 @@
 # Login API Integration Guide
 
 ## Overview
-The authentication system now supports role-based access control with three roles: **ADMIN**, **OPERATOR**, and **GUEST**.
+The authentication system supports role-based access control with three roles: **ADMIN**, **OPERATOR**, and **GUEST**.
+
+## Base URLs
+- **Development**: `http://localhost:8080`
+- **Production**: `https://pantryserver.netlify.app`
 
 ## Login Endpoint
 

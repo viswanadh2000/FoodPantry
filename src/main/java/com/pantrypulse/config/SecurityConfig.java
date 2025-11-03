@@ -61,13 +61,17 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Permissive CORS for local dev; tighten for production.
+    // CORS configuration for local dev and production
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        // Use patterns to allow http://localhost:* and other dev hosts
-        config.setAllowedOriginPatterns(List.of("*"));
+        // Allow localhost for dev and production Netlify URL
+        config.setAllowedOriginPatterns(List.of(
+            "http://localhost:*",
+            "http://127.0.0.1:*",
+            "https://pantryserver.netlify.app"
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "X-Requested-With"));
         config.setExposedHeaders(List.of("Authorization", "Location"));
